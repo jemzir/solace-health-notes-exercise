@@ -1,1 +1,0 @@
-# solace-health-notes-exercise
