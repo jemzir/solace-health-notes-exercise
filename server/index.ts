@@ -1,10 +1,10 @@
 import express, { Request, Response, Application } from "express";
 import path from "path";
 
+import * as messageController from "./controllers/messageController";
+
 const app: Application = express();
 const PORT = 5000;
-
-
 
 app.use(express.json()); // for parsing frontend fetches to server if needed
 
@@ -16,8 +16,8 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // post message
-app.post('/api', (req: Request, res: Response) => {
-  // 
+app.post('/api', messageController.postMessage, (req: Request, res: Response) => {
+  //
 });
 
 // get messages
