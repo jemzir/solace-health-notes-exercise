@@ -2,8 +2,14 @@ import { NextFunction, Request, Response} from "express";
 import fs from "fs";
 import path from "path";
 
-module.exports.default = {
-  postMessage: async (req: Request, res: Response, next: NextFunction) => {
+/**
+ * using sync methods because it is a small proj, otherwise would want to use the async methods
+ * Or make use of writing to streams
+ *  */ 
+
+export class MessageController {
+
+  public postMessage (req: Request, res: Response, next: NextFunction) {
     try {
       // parse req body and get content
       // have a content check of makign it between 30 - 500 characters
@@ -19,13 +25,15 @@ module.exports.default = {
       // create the next object that will be used to store to db
       const date = new Date();
       const newEntry = {
-        timestamp: date.toLocaleDateString(),
+        timestamp: date.toLocaleDateString() +' '+ date.toLocaleTimeString(),
         content: content
       }
 
+      res.locals = newEntry;
+
       // add to the json database
       jsonData.notes.push(newEntry);
-      fs.writeFileSync(path.join(__dirname, '../notesDB.json'), jsonData);
+      fs.writeFileSync(path.join(__dirname, '../notesDB.json'), JSON.stringify(jsonData));
 
       // go to next middleware
       return next();

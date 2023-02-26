@@ -1,7 +1,9 @@
 import express, { Request, Response, Application } from "express";
 import path from "path";
 
-import * as messageController from "./controllers/messageController";
+import { MessageController } from "../server/controllers/messageController";
+
+const controller: MessageController = new MessageController();
 
 const app: Application = express();
 const PORT = 5000;
@@ -16,8 +18,8 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 // post message
-app.post('/api', messageController.postMessage, (req: Request, res: Response) => {
-  //
+app.post('/api', controller.postMessage, (req: Request, res: Response) => {
+  res.status(200).json(res.locals);
 });
 
 // get messages
