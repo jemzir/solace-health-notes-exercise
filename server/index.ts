@@ -28,8 +28,8 @@ app.get('/api', controller.getMessages, (req: Request, res: Response) => {
 });
 
 // deleting messages
-app.delete('/api', (req: Request, res: Response) => {
-  // 
+app.delete('/api', controller.deleteMessage, (req: Request, res: Response) => {
+  res.status(200).json(res.locals);
 })
 
 // check for port connection

@@ -4,12 +4,12 @@ import path from "path";
 
 /**
  * using sync methods because it is a small proj, otherwise would want to use the async methods
- * Or make use of writing to streams
- *  */ 
+ * also am making use of a JSON file as a database -- this is not very scalable... but did so for ease of usage
+ */ 
 
 export class MessageController {
 
-  public postMessage (req: Request, res: Response, next: NextFunction) {
+  public postMessage(req: Request, res: Response, next: NextFunction) {
     try {
       // parse req body and get content
       // have a content check of makign it between 30 - 500 characters
@@ -42,7 +42,8 @@ export class MessageController {
       return next({error: error});
     }
   }
-  public getMessages (req: Request, res: Response, next: NextFunction) {
+
+  public getMessages(req: Request, res: Response, next: NextFunction) {
     try {
       // read from json database and then pass that array into res.locals
       const fileData = fs.readFileSync(path.join(__dirname, '../notesDB.json'));
@@ -51,8 +52,32 @@ export class MessageController {
       return next();
 
     } catch (error: unknown) {
-      console.log('Error in postMessage', error);
+      console.log('Error in getMessage', error);
       return next({error: error});
     }
   }
+
+  public deleteMessage(req: Request, res: Response, next: NextFunction) {
+    try {
+      // getting the index from the array
+      const { messageid } = req.body;
+
+      // getting file data
+      const fileData = fs.readFileSync(path.join(__dirname, '../notesDB.json'));
+      const jsonData = JSON.parse(fileData.toString());
+
+      // storing note content and deleting the note
+      res.locals = jsonData.notes[+messageid].content;
+      jsonData.notes.splice(+messageid, 1);
+
+      // rewriting the database without the note
+      fs.writeFileSync(path.join(__dirname, '../notesDB.json'), JSON.stringify(jsonData));
+      return next();
+
+    } catch (error: unknown) {
+      console.log('Error in deleteMessage', error);
+      return next({error: error});
+    }
+  }
+
 }
