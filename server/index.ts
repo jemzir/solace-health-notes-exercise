@@ -23,8 +23,8 @@ app.post('/api', controller.postMessage, (req: Request, res: Response) => {
 });
 
 // get messages
-app.get('/api', (req: Request, res: Response) => {
-  // 
+app.get('/api', controller.getMessages, (req: Request, res: Response) => {
+  res.status(200).json(res.locals);
 });
 
 // deleting messages

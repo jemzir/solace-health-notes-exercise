@@ -42,4 +42,17 @@ export class MessageController {
       return next({error: error});
     }
   }
+  public getMessages (req: Request, res: Response, next: NextFunction) {
+    try {
+      // read from json database and then pass that array into res.locals
+      const fileData = fs.readFileSync(path.join(__dirname, '../notesDB.json'));
+      const jsonData = JSON.parse(fileData.toString());
+      res.locals = jsonData;
+      return next();
+
+    } catch (error: unknown) {
+      console.log('Error in postMessage', error);
+      return next({error: error});
+    }
+  }
 }
