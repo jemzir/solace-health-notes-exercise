@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import NotesContainer from './container/NotesContainer';
 
 function App() {
   return (
-    <h1>
-      Hello World from React!
-    </h1>
+    <Fragment>
+      <h1>
+        Hello World from React!
+      </h1>
+      < NotesContainer/>
+    </Fragment>
   )
 }
 
