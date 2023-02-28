@@ -7,6 +7,10 @@ import path from "path";
  * also am making use of a JSON file as a database -- this is not very scalable... but did so for ease of usage
  */ 
 
+interface IEntry {
+  content: string
+}
+
 export class MessageController {
 
   public postMessage(req: Request, res: Response, next: NextFunction) {
@@ -28,8 +32,9 @@ export class MessageController {
         timestamp: date.toLocaleDateString() +' '+ date.toLocaleTimeString(),
         content: content
       }
-
-      res.locals = newEntry;
+      const latestEntry = jsonData.notes.map((el:IEntry) => el.content);
+      latestEntry.push(newEntry.content);
+      res.locals = latestEntry;
 
       // add to the json database
       jsonData.notes.push(newEntry);
@@ -60,15 +65,33 @@ export class MessageController {
   public deleteMessage(req: Request, res: Response, next: NextFunction) {
     try {
       // getting the index from the array
-      const { messageid } = req.body;
+      const { content } = req.body;
 
       // getting file data
       const fileData = fs.readFileSync(path.join(__dirname, '../notesDB.json'));
       const jsonData = JSON.parse(fileData.toString());
+      console.log(jsonData);
 
       // storing note content and deleting the note
-      res.locals = jsonData.notes[+messageid].content;
-      jsonData.notes.splice(+messageid, 1);
+      /** NOTE: The deletion method here was chosen because the JSON database was used, and if I 
+       * instead used another database, i could reference the deletion via id.
+       * 
+       * This method also causes the issue of if there are two or more notes with the same content,
+       * it will delete the first instance of that note
+      */
+      const remainingData: IEntry[] = [];
+
+      let deleted = false;
+      for (let i = 0; i < jsonData.notes.length; i++) {
+        if (!deleted && jsonData.notes[i].content == content) {
+          deleted = true;
+          continue;
+        }
+        remainingData.push(jsonData.notes[i]);
+      }
+      const remainingNotes:string[] = remainingData.map((el: IEntry) => el.content);
+      res.locals = remainingNotes;
+      jsonData.notes = remainingData;
 
       // rewriting the database without the note
       fs.writeFileSync(path.join(__dirname, '../notesDB.json'), JSON.stringify(jsonData));

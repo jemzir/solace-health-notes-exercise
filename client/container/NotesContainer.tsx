@@ -6,7 +6,6 @@ function NotesContainer() {
   // requesting from the backend, to grab and create Note components
   // based on the array 
   // if there are existing characters in the searchBar, it will filter the array based on that
-  // need a useEffect here... can also make searchBar be the one that passes the state of arrays down to notesContainer
 
   const [ notesData, setNotesData ] = useState([""]);
   const [ visibleNotes, setVisibleNotes ] = useState([""]);
@@ -45,14 +44,14 @@ function NotesContainer() {
   }
   
   return (
-    <div>
+    <>
       <input onChange={filterNotes} placeholder="Search Bar" className="search-bar">
       </input>
       <div className="notes-container">
-        {visibleNotes.map((el, i) => <Note key={i} prop={el} index={i} ></Note>)}
+        {visibleNotes.map((el, i) => <Note key={i} prop={el} index={i} refreshFunc={refreshNotes}></Note>)}
       </div>
       < CreateNewNoteBtn notesProp={visibleNotes} refreshFunc={refreshNotes} />
-    </div>
+    </>
   )
 }
 

@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface CreateNewNoteProps {
   notesProp: string[],
   refreshFunc(arr: string[]): void
 }
 
-function CreateNewNoteBtn({ notesProp, refreshFunc }: CreateNewNoteProps) {
+function CreateNewNoteBtn({ refreshFunc }: CreateNewNoteProps) {
   // request with contents upon submission (make sure it is x>20 && x<200) on submit
   const [ newNote, setNewNote] = useState("");
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (newNote.length < 20) {
@@ -21,17 +21,17 @@ function CreateNewNoteBtn({ notesProp, refreshFunc }: CreateNewNoteProps) {
     }
     console.log(newNote);
 
-    fetch("http://localhost:5001/api", {
+    const fetchedData = await fetch("http://localhost:5001/api", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({content: newNote})
-    })
+    });
+    const parsedNotes = await fetchedData.json();
 
-    notesProp.push(newNote);
-    refreshFunc(notesProp);
-    console.log('notesProp in create', notesProp)
+    refreshFunc(parsedNotes);
+    alert("Note Added!");
     return true;
   }
 
