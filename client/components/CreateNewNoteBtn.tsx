@@ -21,6 +21,7 @@ function CreateNewNoteBtn({ refreshFunc }: CreateNewNoteProps) {
     }
     console.log(newNote);
 
+    // fetch the data and make use of a fetch mutation to repopulate the notes
     const fetchedData = await fetch("http://localhost:5001/api", {
       method: "POST",
       headers: {

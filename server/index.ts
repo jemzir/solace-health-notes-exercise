@@ -12,8 +12,6 @@ const PORT = 5001;
 app.use(cors()) // in a more production-like environment, would not use cors, rather would make a more configured access control
 app.use(express.json()); // for parsing frontend fetches to server if needed
 
-// static css and ts files for assets
-
 // serving the initial index.html
 app.get('/', (req: Request, res: Response) => {
   res.status(200).sendFile(path.resolve(__dirname, '../client/index.html'));

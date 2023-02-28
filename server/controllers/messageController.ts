@@ -16,7 +16,7 @@ export class MessageController {
   public postMessage(req: Request, res: Response, next: NextFunction) {
     try {
       // parse req body and get content
-      // have a content check of makign it between 30 - 500 characters
+      // have a content check of makign it between 20 - 300 characters
       const { content } = req.body;
 
       if (content.length < 20) return next({error: "Less than 20 count not okay"});

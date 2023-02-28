@@ -30,6 +30,7 @@ function NotesContainer() {
     setVisibleNotes(visibleNotes);
   }, [visibleNotes])
 
+  // filtering functionality for indexing
   function filterNotes(e: React.ChangeEvent<HTMLInputElement>) {
     const textMatch = e.target.value;
     const filteredNotes:string[] = notesData.filter((el) => {
@@ -39,6 +40,10 @@ function NotesContainer() {
     setVisibleNotes(filteredNotes);
   }
 
+  // a refreshing function that will be prop drilled down --
+  /** in a small application, one can get away with prop passing once/twice, but on a larger scale
+   * needing to make use of a sing source of truth is better , like Redux
+   */
   function refreshNotes(arr:string[]) {
     setVisibleNotes(arr);
   }

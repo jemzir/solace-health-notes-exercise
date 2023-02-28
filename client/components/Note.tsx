@@ -7,6 +7,9 @@ interface NoteProps {
 }
 
 function Note({ prop, refreshFunc }: NoteProps) {
+
+  // delete functionality to be inbued in with the note
+  // same idea from createNote, where there is a mutated fetch to repopulate notes
   const handleClick = async () => {
     const mutatedFetch = await fetch("http://localhost:5001/api", {
       method: "DELETE",
@@ -24,7 +27,7 @@ function Note({ prop, refreshFunc }: NoteProps) {
   
   return (
     <>
-      <div>
+      <div className="note">
         <span>{prop}</span><button onClick={handleClick} className="delete-note">x</button>
       </div>
     </>
