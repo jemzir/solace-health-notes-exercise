@@ -1,5 +1,6 @@
-import React, { ChangeEventHandler, useEffect, useState } from "react";
-import SearchBar from "../components/SearchBar";
+import React, { useEffect, useState } from "react";
+import CreateNewNoteBtn from "../components/CreateNewNoteBtn";
+import Note from "../components/Note";
 
 function NotesContainer() {
   // requesting from the backend, to grab and create Note components
@@ -26,10 +27,21 @@ function NotesContainer() {
   },
   []);
 
+  useEffect(() => {
+    setVisibleNotes(visibleNotes);
+  }, [visibleNotes])
+
   function filterNotes(e: React.ChangeEvent<HTMLInputElement>) {
     const textMatch = e.target.value;
-    const filteredNotes:string[] = notesData.filter((el) => el.includes(textMatch));
+    const filteredNotes:string[] = notesData.filter((el) => {
+      el = el.toLowerCase();
+      return el.includes(textMatch.toLowerCase());
+    });
     setVisibleNotes(filteredNotes);
+  }
+
+  function refreshNotes(arr:string[]) {
+    setVisibleNotes(arr);
   }
   
   return (
@@ -37,8 +49,9 @@ function NotesContainer() {
       <input onChange={filterNotes} placeholder="Search Bar" className="search-bar">
       </input>
       <div className="notes-container">
-        {visibleNotes.map((el, i) => <div key={i} >{el}</div>)}
+        {visibleNotes.map((el, i) => <Note key={i} prop={el} index={i} ></Note>)}
       </div>
+      < CreateNewNoteBtn notesProp={visibleNotes} refreshFunc={refreshNotes} />
     </div>
   )
 }
